@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import get_jwt_identity
 import bcrypt
 import sqlite3
 
@@ -144,7 +145,6 @@ def add_category():
     return jsonify({"message": "Category added successfully"}), 201
 
 
-from flask_jwt_extended import get_jwt_identity
 
 @app.route('/user_info', methods=['GET'])
 @jwt_required()
