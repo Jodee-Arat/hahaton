@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "title": "Точка 1",
+    "description": "Это первая точка.",
+    "coordinates": [56.01, 92.87],
+    "image": "/i.png"
+  },
+  {
+    "id": 2,
+    "title": "Точка 2",
+    "description": "Это вторая точка.",
+    "coordinates": [56.03, 92.9],
+    "image": "/i.png"
+  },
+  {
+    "id": 3,
+    "title": "Точка 3",
+    "description": "Это третья точка.",
+    "coordinates": [56.05, 92.95],
+    "image": "/i.png"
+  }
+]
