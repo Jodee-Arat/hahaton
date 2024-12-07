@@ -101,6 +101,48 @@ def admin_route():
 
     return jsonify({"message": f"Hello {current_user}, you have admin access!"}), 200
 
+@app.route('/add_category', methods=['POST'])
+@jwt_required()  # Проверка наличия валидного JWT
+def add_category():
+    # Получаем данные из запроса
+    data = request.get_json()
+    name = data.get('name')
+    description = data.get('description')
+
+    # Проверка, что все поля заполнены
+    if not name or not description:
+        return jsonify({"error": "Name and description are required"}), 400
+
+    # Подключаемся к базе данных
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Проверка на уникальность названия категории
+    cursor.execute("SELECT * FROM categories WHERE name = ?", (name,))
+    existing_category = cursor.fetchone()
+    if existing_category:
+        conn.close()
+        return jsonify({"error": "Category with this name already exists"}), 400
+
+    # Получаем роль пользователя из токена
+    current_user = get_jwt_identity()
+    role = get_jwt_identity().get("role", "")
+
+    # Проверка, что роль пользователя 'admin'
+    if role != 'Администратор':
+        conn.close()
+        return jsonify({"error": "Access forbidden: you are not an admin"}), 403
+
+    # Запись новой категории в базу данных
+    cursor.execute('''INSERT INTO categories (name, description, isDelete) 
+                      VALUES (?, ?, ?)''', (name, description, 0))
+    
+    # Сохраняем изменения
+    conn.commit()
+    conn.close()
+
+    return jsonify({"message": "Category added successfully"}), 201
+
 
 from flask_jwt_extended import get_jwt_identity
 
